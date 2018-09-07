@@ -501,18 +501,18 @@ var capitalizeFirst = function(array) {
 // };
 // nestedEvenSum(obj1); // 10
 var nestedEvenSum = function(obj) {
-	// var evenSum = 0;
+	var evenSum = 0;
 
-	// for (var key in obj) {
-	// 	if (Number.isInteger(obj[key])) {
-	// 		if (obj[key] % 2 === 0) {
-	// 			evenSum += obj[key];
-	// 		}
-	// 	} else {
-	// 	  nestedEvenSum(obj[key]);
-	// 	}
-	// }
-	// return evenSum;
+	for (var key in obj) {
+		if (Number.isInteger(obj[key])) {
+			if (obj[key] % 2 === 0) {
+				evenSum += obj[key];
+			}
+		} else {
+		  nestedEvenSum(obj[key]);
+		}
+	}
+	return evenSum;
 };
 
 // 30. Flatten an array containing nested arrays.
@@ -579,12 +579,22 @@ var compress = function(list) {
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
 var augmentElements = function(array, aug) {
+    return array.map(function(el){return el.concat(aug);});
+    if(array.length===1) return array[0].concat(aug);
+    return [array[0].concat(aug)].concat(augmentElements(array.slice(1), aug));
+
 };
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
 var minimizeZeroes = function(array) {
+	if (array.length === 0) { return array };
+	if(minimizeZeroes(array.slice(1))[0] === 0 && array[0] === 0) {
+	    return minimizeZeroes(array.slice(1));
+	} else {
+	    return [array[0]].concat(minimizeZeroes(array.slice(1)));
+	}
 };
 
 // 35. Alternate the numbers in an array between positive and negative regardless of
@@ -592,6 +602,10 @@ var minimizeZeroes = function(array) {
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
 var alternateSign = function(array) {
+	if (array.length === 0) { return array; }
+	if(array[0] < 0) { array[0] = -array[0]; }
+	if(array[1] > 0) { array[1] = -array[1]; }
+	return [array[0], array[1]].concat(alternateSign(array.slice(2)));
 };
 
 // 36. Given a string, return a string with digits converted to their word equivalent.
