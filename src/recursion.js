@@ -458,6 +458,12 @@ var fibonacci = function(n) {
 // nthFibo(7); // 13
 // nthFibo(3); // 2
 var nthFibo = function(n) {
+    if(n < 0) {
+    	return null;
+    } else if (n === 1) {
+		return 1;
+	}
+  	return nthFibo(n - 1) + nthFibo(n - 2);
 };
 
 // 27. Given an array of words, return a new array containing each word capitalized.
@@ -480,8 +486,7 @@ var capitalizeFirst = function(array) {
 	if (array.length === 0) {
 		return newArray;
 	}
-	var letter = (array[0].charAt(0).toUpperCase());
-	newArray.push(array[0]);
+	newArray.push(array[0].charAt(0).toUpperCase() + array[0].slice(1));
 	newArray = newArray.concat(capitalizeFirst(array.slice(1)));
 	return newArray;
 };
@@ -496,16 +501,47 @@ var capitalizeFirst = function(array) {
 // };
 // nestedEvenSum(obj1); // 10
 var nestedEvenSum = function(obj) {
+	// var evenSum = 0;
+
+	// for (var key in obj) {
+	// 	if (Number.isInteger(obj[key])) {
+	// 		if (obj[key] % 2 === 0) {
+	// 			evenSum += obj[key];
+	// 		}
+	// 	} else {
+	// 	  nestedEvenSum(obj[key]);
+	// 	}
+	// }
+	// return evenSum;
 };
 
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
 var flatten = function(array) {
+  var unnestedArr = [];
+
+  for (var i = 0; i < array.length; i++) {
+  	if (Array.isArray(array[i])) {
+  		unnestedArr = unnestedArr.concat(flatten(array[i]));
+  	} else {
+  		unnestedArr.push(array[i]);
+  	}
+  }
+  return unnestedArr;
 };
 
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
-var letterTally = function(str, obj) {
+var letterTally = function(str, obj={}) {
+  if(str.length===0){
+    return obj;
+  }
+  if(str[0] in obj){
+    obj[str[0]]++
+  }else{
+    obj[str[0]] = 1;
+  }
+  return letterTally(str.slice(1),obj)
 };
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
@@ -514,6 +550,29 @@ var letterTally = function(str, obj) {
 // compress([1,2,2,3,4,4,5,5,5]) // [1,2,3,4,5]
 // compress([1,2,2,3,4,4,2,5,5,5,4,4]) // [1,2,3,4,2,5,4]
 var compress = function(list) {
+	// var obj = {};
+	// if (list.length === 0) {
+	// 	return Object.keys(obj);
+	// }
+
+	// if (list[0] in obj) {
+	// 	obj[list[0]]++;
+	// } else {
+	// 	obj[list[0]] = 1;
+	// }
+	// return compress(list.slice(1))
+	var copy = list;
+	var newArray = [];
+	if (copy.length === 0) {
+		return newArray;
+	}
+
+	if (copy.shift() !== copy[0]) {
+		newArray.push(copy.shift());
+	}
+
+	return newArray.concat(compress(copy.slice(1)));
+
 };
 
 // 33. Augument every element in a list with a new value where each element is an array
@@ -539,6 +598,23 @@ var alternateSign = function(array) {
 // Assume all numbers are single digits (less than 10).
 // numToText("I have 5 dogs and 6 ponies"); // "I have five dogs and six ponies"
 var numToText = function(str) {
+	var strArray = str.split(' ');
+	var newArray = [];
+	var numObj = {zero:0, one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9}
+
+	var numText = function() {
+		if (strArray.length === 0) {
+			return newArray.join(' ')
+		}
+		if (numObj.hasOwnProperty(strArray[0])) {
+			newArray.push(numObj[strArray[0]])
+		} else {
+			newArray.push(strArray[0])
+		}
+	}
+
+	numText();
+	return numToText(strArray.slice(1));
 };
 
 
